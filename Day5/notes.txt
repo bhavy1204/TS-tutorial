@@ -1,0 +1,9 @@
+Package	Purpose
+typescript	TypeScript compiler
+express	Backend framework
+dotenv	.env variables
+@types/node	Node.js TypeScript types
+@types/express	Express TypeScript types
+tsx	Runs TS directly during development
+ts-node	Another way to execute TS
+
