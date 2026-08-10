@@ -1,52 +1,39 @@
-import type { Request,Response } from "express";
+import type { Request, Response, NextFunction } from "express";
+import type { Product } from "../models/product.js";
+import { products } from "../models/product.js";
+import { AsyncHandler } from "../utils/asyncHandler.js";
 
-interface ProductParams{
-    id:string
+interface ProductParams {
+  id: string;
 }
 
 interface CreateProduct{
-    name:string,
-    price:number
+  name:string
 }
 
-export const getProducts = (req:Request,res:Response):void =>{
-    const products = [
-      {
-        id: 1,
-        name: "Laptop",
-        price: 60000,
-      },
-      {
-        id: 2,
-        name: "Phone",
-        price: 30000,
-      },
-    ];
+export const CreateProduct = AsyncHandler(async(req: Request<{},{},CreateProduct>, res: Response) => {
+  const { name } = req.body;
+  const product: Product = { id: String(Date.now()), name };
 
-     res.status(200).json(products);
-}
+  products.push(product);
 
-export const getProduct =(req:Request<ProductParams>,res:Response):void=>{
-    const id = req.params.id;
+  res.status(201).json(
+    product
+  )
+});
 
-    res.json({
-      productId: id,
-    });
-}
-
-
-
-// Request<Params, ResBody, ReqBody>;
-
-
-export const createProdcut = (req:Request<{},{},CreateProduct> ,res:Response):void=>{
-    const {name,price}= req.body;
-
-    res.status(201).json({
-        name,
-        price
+export const getAllProducts = AsyncHandler(async(req:Request,res:Response)=>{
+    res.status(200).json({
+      products
     })
-}
+})
 
+export const getProduct = AsyncHandler(async(req:Request<ProductParams>,res:Response)=>{
 
-
+    const id = req.params.id;
+    const result = products.find((p)=> p.id === id);
+    res.status(200).json({
+      result
+    })
+    
+})

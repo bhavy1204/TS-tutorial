@@ -1,31 +1,18 @@
-import express  from "express";
-import type { Request,Response } from "express";
-import { logger } from "./middleware/logger.middleware.js";
+import app from "./app.js";
+import dotenv from "dotenv";
 
-const app = express();
+dotenv.config();
 
-app.use(express.json());
+interface Config {
+  port: number;
+  nodeEnv: string;
+}
 
-app.use(logger);
+const config: Config = {
+  port: Number(process.env.PORT) || 3000,
+  nodeEnv: process.env.NODE_ENV || "devlopment",
+};
 
-import products from "./routes/product.route.js"
-
-app.use("/api/products",products)
-
-// not necessarly needed but good for understanding the types.
-app.get("/",(req:Request,res:Response)=>{
-    res.json({
-        message:"Welcome to TS server"
-    })
+app.listen(config.port, () => {
+  console.log(`Server up and running at ${config.port}`);
 });
-
-const PORT = 3000;
-
-app.listen(PORT,()=>{
-    console.log(`Server up and running at ${PORT}`)
-})
-
-
-
-
-
